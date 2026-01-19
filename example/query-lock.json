@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "database_type": "postgres",
+    "schema_fingerprint": "6a3d16086836ce98f2d5f4740bb4080ab1ebcb902df88622f5411c5d1840ae90"
+  },
+  "queries": {
+    "setup_schema": {
+      "sql": "CREATE TABLE users (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL, join_date DATE DEFAULT CURRENT_DATE);CREATE TABLE products (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, category VARCHAR(255), price NUMERIC(10, 2) NOT NULL, stock_quantity INTEGER NOT NULL);CREATE TABLE orders (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, product_id INTEGER NOT NULL, quantity INTEGER NOT NULL, order_date DATE DEFAULT CURRENT_DATE, FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (product_id) REFERENCES products(id));",
+      "explanation": "Creates a normalized e-commerce schema with three tables: 'users', 'products', and 'orders', including primary and foreign keys.",
+      "parameters": [],
+      "prompt": "Create a normalized schema for an e-commerce system with three tables: 1. 'users' (id, name, email, join_date) 2. 'products' (id, name, category, price, stock_quantity) 3. 'orders' (id, user_id, product_id, quantity, order_date). Ensure appropriate Foreign Keys.",
+      "paramNames": [],
+      "operationType": "DEFINE",
+      "schemaHash": "506d8b06f93c8c4b182fbfea691206c5c9b9193136c18d211d791de81a14541a",
+      "createdAt": "2026-01-04T14:11:09.961Z",
+      "lastExecuted": "2026-01-04T14:11:09.962Z"
+    },
+    "seed_data": {
+      "sql": "INSERT INTO \"users\" (\"name\", \"email\", \"join_date\") VALUES ('Alice Smith', 'alice.smith@example.com', '2023-01-15');INSERT INTO \"users\" (\"name\", \"email\", \"join_date\") VALUES ('Bob Johnson', 'bob.johnson@example.com', '2023-02-20');INSERT INTO \"users\" (\"name\", \"email\", \"join_date\") VALUES ('Charlie Brown', 'charlie.brown@example.com', '2023-03-10');INSERT INTO \"users\" (\"name\", \"email\", \"join_date\") VALUES ('Diana Prince', 'diana.prince@example.com', '2023-04-05');INSERT INTO \"users\" (\"name\", \"email\", \"join_date\") VALUES ('Ethan Hunt', 'ethan.hunt@example.com', '2023-05-22');INSERT INTO \"products\" (\"name\", \"category\", \"price\", \"stock_quantity\") VALUES ('Laptop X1', 'Electronics', 1200.00, 50);INSERT INTO \"products\" (\"name\", \"category\", \"price\", \"stock_quantity\") VALUES ('Smartphone Pro', 'Electronics', 850.00, 120);INSERT INTO \"products\" (\"name\", \"category\", \"price\", \"stock_quantity\") VALUES ('Headphones Z', 'Electronics', 199.99, 200);INSERT INTO \"products\" (\"name\", \"category\", \"price\", \"stock_quantity\") VALUES ('Smartwatch V2', 'Electronics', 350.00, 80);INSERT INTO \"products\" (\"name\", \"category\", \"price\", \"stock_quantity\") VALUES ('Tablet Air', 'Electronics', 600.00, 75);INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (1, 2, 1, '2023-06-01');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (2, 1, 2, '2023-06-02');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (3, 3, 1, '2023-06-03');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (4, 5, 1, '2023-06-04');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (5, 4, 3, '2023-06-05');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (1, 3, 2, '2023-06-06');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (2, 5, 1, '2023-06-07');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (3, 1, 1, '2023-06-08');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (4, 2, 1, '2023-06-09');INSERT INTO \"orders\" (\"user_id\", \"product_id\", \"quantity\", \"order_date\") VALUES (5, 3, 2, '2023-06-10');",
+      "explanation": "Inserts 5 users, 5 electronics products, and 10 orders into the database with hardcoded values.",
+      "parameters": [],
+      "prompt": "Insert the following data: - 5 users with realistic names. - 5 electronics products with prices $500-$2000. - 10 orders distributing these products randomly.",
+      "paramNames": [],
+      "operationType": "CREATE",
+      "schemaHash": "6a3d16086836ce98f2d5f4740bb4080ab1ebcb902df88622f5411c5d1840ae90",
+      "createdAt": "2026-01-04T14:11:17.196Z",
+      "lastExecuted": "2026-01-04T14:11:17.196Z"
+    },
+    "get_top_spenders": {
+      "sql": "SELECT u.name, SUM(o.quantity * p.price) AS total_spent FROM users AS u JOIN orders AS o ON u.id = o.user_id JOIN products AS p ON o.product_id = p.id GROUP BY u.name ORDER BY total_spent DESC LIMIT 3;",
+      "explanation": "This query calculates the total amount spent by each user by joining orders and products tables, then sums the quantity multiplied by price. It then retrieves the top 3 users with the highest total spent, showing their name and total spent.",
+      "parameters": [],
+      "prompt": "List the top 3 users who have spent the most money. Show names and total_spent. Order by total_spent descending.",
+      "paramNames": [],
+      "operationType": "READ",
+      "schemaHash": "6a3d16086836ce98f2d5f4740bb4080ab1ebcb902df88622f5411c5d1840ae90",
+      "createdAt": "2026-01-04T14:12:42.741Z",
+      "lastExecuted": "2026-01-04T14:12:42.742Z"
+    },
+    "check_low_stock": {
+      "sql": "SELECT * FROM products WHERE stock_quantity < 50;",
+      "explanation": "Retrieves all columns from products where stock_quantity is less than 50.",
+      "parameters": [],
+      "prompt": "List products with stock_quantity < 50.",
+      "paramNames": [],
+      "operationType": "READ",
+      "schemaHash": "6a3d16086836ce98f2d5f4740bb4080ab1ebcb902df88622f5411c5d1840ae90",
+      "createdAt": "2026-01-04T14:12:44.893Z",
+      "lastExecuted": "2026-01-04T14:12:44.893Z"
+    },
+    "recent_orders": {
+      "sql": "SELECT u.name AS \"User Name\", p.name AS \"Product Name\", p.price AS \"Price\", o.order_date AS \"Order Date\" FROM orders o JOIN users u ON o.user_id = u.id JOIN products p ON o.product_id = p.id ORDER BY o.order_date DESC LIMIT 5;",
+      "explanation": "Retrieves the user name, product name, product price, and order date for the 5 most recent orders.",
+      "parameters": [],
+      "prompt": "Show details of the 5 most recent orders. Include User Name, Product Name, Price, and Order Date.",
+      "paramNames": [],
+      "operationType": "READ",
+      "schemaHash": "6a3d16086836ce98f2d5f4740bb4080ab1ebcb902df88622f5411c5d1840ae90",
+      "createdAt": "2026-01-04T14:12:48.446Z",
+      "lastExecuted": "2026-01-04T14:12:48.446Z"
+    }
+  }
+}
